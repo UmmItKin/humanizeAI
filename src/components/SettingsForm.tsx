@@ -63,17 +63,24 @@ export function SettingsForm() {
       if (response.ok) {
         const data = await response.json()
         toast.success("API Key Valid!", {
-          description: data.choices?.[0]?.message?.content || "Connection successful",
+          description: data.choices?.[0]?.message?.content || JSON.stringify(data, null, 2),
         })
       } else {
         const errorData = await response.json().catch(() => ({}))
+        
+        const errorMessage = errorData.error?.message 
+          ? `${errorData.error.message}\n\nFull Response: ${JSON.stringify(errorData, null, 2)}`
+          : JSON.stringify(errorData, null, 2) || response.statusText
+        
         toast.error(`API Test Failed (${response.status})`, {
-          description: errorData.error?.message || response.statusText,
+          description: errorMessage,
+          duration: 15000,
         })
       }
     } catch (error) {
       toast.error("Connection Error", {
         description: error instanceof Error ? error.message : "Unknown error",
+        duration: 10000,
       })
     } finally {
       setIsLoading(false)
