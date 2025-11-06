@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { Layout } from "@/components/Layout";
 import { HumanizerInterface } from "@/components/HumanizerInterface";
 import { GlobalToaster } from "@/components/GlobalToaster";
+import { ClientRouter } from "astro:transitions";
 ---
 
 <html lang="en" class="dark">
@@ -12,10 +13,11 @@ import { GlobalToaster } from "@/components/GlobalToaster";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Humanizer AI</title>
+		<ClientRouter />
 	</head>
 
 	<body>
-		<Layout client:load title="Humanizer AI - Main page">
+		<Layout client:only="react" title="Humanizer AI">
 			<HumanizerInterface client:load />
 		</Layout>
 		<GlobalToaster client:only="react" />
