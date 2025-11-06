@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { AppSidebar } from "@/components/AppSidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Footer } from "@/components/FooterReact"
+import { Toaster } from "sonner"
 
 interface LayoutProps {
   children: ReactNode
@@ -22,6 +23,7 @@ export function Layout({ children, title }: LayoutProps) {
         </div>
         <Footer />
       </SidebarInset>
+      <Toaster position="bottom-right" richColors theme="dark" />
     </SidebarProvider>
   )
 }
