@@ -2,8 +2,6 @@
 import '../styles/global.css';
 import { Layout } from "@/components/Layout";
 import { HistoryList } from "@/components/HistoryList";
-import { GlobalToaster } from "@/components/GlobalToaster";
-import { ClientRouter } from "astro:transitions";
 ---
 
 <html lang="en" class="dark">
@@ -13,13 +11,11 @@ import { ClientRouter } from "astro:transitions";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>History - Humanizer AI</title>
-		<ClientRouter />
 	</head>
 
 	<body>
 		<Layout client:only="react" title="Humanizer AI - History">
 			<HistoryList client:only="react" />
 		</Layout>
-		<GlobalToaster client:only="react" />
 	</body>
 </html>
