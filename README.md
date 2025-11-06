@@ -1,13 +1,56 @@
-# Astro with Tailwind
+# Humanize AI
+
+A web application for humanizing AI-generated text using Grok AI models from xAI. Transform robotic-sounding content into natural, human-like text across multiple styles and tones.
+
+## Features
+
+- **Multiple Humanization Modes**
+  - Normal: Standard humanization with natural flow
+  - Chit-chat: Conversational and casual tone
+  - Academic: Scholarly and formal style
+  - Shorten: Condensed version while maintaining key information
+
+- **History Tracking**
+  - Automatic saving of all humanization results
+  - Copy and delete functionality
+
+## Getting Started
+
+### Prerequisites
+
+- Bun package manager
+- Grok API key from [console.x.ai](https://console.x.ai)
+
+### Installation
 
 ```sh
-bun create astro@latest -- --template with-tailwindcss
+git clone https://github.com/UmmItKin/humanizeAI.git
+cd humanizeAI
+bun install
+bun run dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/with-tailwindcss)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/with-tailwindcss)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/with-tailwindcss/devcontainer.json)
+### Configuration
 
-Astro comes with [Tailwind](https://tailwindcss.com) support out of the box. This example showcases how to style your Astro project with Tailwind.
+1. Navigate to the Settings page
+2. Enter your Grok API key
+3. Select your preferred Grok model
+4. Click "Save API Key" to store locally
 
-For complete setup instructions, please see our [Tailwind Integration Guide](https://docs.astro.build/en/guides/integrations-guide/tailwind).
+### Usage
+
+1. Enter or paste AI-generated text into the input box
+2. Select a humanization mode (Normal, Chit-chat, Academic, or Shorten)
+3. Click "Humanize AI" to process the text
+4. Review and copy the humanized output
+5. Access your history to view past results
+
+## License
+
+This project is licensed under the AGPLv3 License.
+
+## Contributing
+
+Contributions are welcome :)
+
+Use conventional commit style!
