@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 import normalPrompt from "@/prompts/normal-prompt.md?raw"
 import chitChatPrompt from "@/prompts/chit-chat-prompt.md?raw"
 import academicPrompt from "@/prompts/academic-prompt.md?raw"
@@ -61,12 +62,19 @@ export function HumanizerInterface() {
         </div>
 
         <div className="flex flex-col gap-2 min-h-0">
-          <textarea
-            value={outputText}
-            readOnly
-            placeholder="Paraphrased text will appear here"
-            className="flex-1 w-full rounded-lg border border-input bg-muted px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
-          />
+          <div className="relative flex-1 min-h-0">
+            <textarea
+              value={outputText}
+              readOnly
+              placeholder="Paraphrased text will appear here"
+              className="flex-1 w-full h-full rounded-lg border border-input bg-muted px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+            />
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-muted/80 rounded-lg">
+                <Loader2 className="h-16 w-16 animate-spin text-primary" />
+              </div>
+            )}
+          </div>
           <div className="text-sm text-muted-foreground">
             {outputWordCount} words
           </div>
