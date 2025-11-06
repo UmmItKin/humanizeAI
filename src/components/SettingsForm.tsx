@@ -14,7 +14,6 @@ const GROK_MODELS = [
   { value: "grok-3-mini", label: "grok-3-mini (Recommended)" },
   { value: "grok-4-fast-reasoning", label: "grok-4-fast-reasoning" },
   { value: "grok-4-fast-non-reasoning", label: "grok-4-fast-non-reasoning" },
-  { value: "grok-beta", label: "grok-beta" },
 ]
 
 export function SettingsForm() {
