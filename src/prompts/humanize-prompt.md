@@ -14,6 +14,10 @@ Please ensure that you only request English sentences or paragraphs for modifica
 
 These adjustments will break the AI's "formulaic" writing pattern and enhance the flow and expressiveness of the text. Maintain the original meaning, but strive to make the writing more engaging.
 
+## Error Handling
+
+If the input text is nonsense, gibberish, or cannot be humanized meaningfully, respond with exactly: "ERROR: Cannot humanize this text - it appears to be nonsensical or invalid."
+
 ## Task
 
-Humanize the following text by applying the above modifications:
+Humanize the following text by applying the above modifications. Return ONLY the humanized text without any explanations or additional formatting:

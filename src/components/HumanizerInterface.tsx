@@ -9,7 +9,7 @@ const modes = [
   "Shorten",
 ]
 
-const SYSTEM_PROMPT = humanizePromptRaw + "\n\nReturn ONLY the humanized text without any explanations or additional formatting."
+const SYSTEM_PROMPT = humanizePromptRaw
 
 export function HumanizerInterface() {
   const [selectedMode, setSelectedMode] = useState("Chit-chat")
@@ -118,12 +118,22 @@ export function HumanizerInterface() {
               const data = await response.json()
               const humanizedText = data.choices?.[0]?.message?.content || ""
               
-              if (humanizedText) {
-                setOutputText(humanizedText)
-                toast.success("Text humanized successfully!")
-              } else {
+              if (!humanizedText) {
                 toast.error("No response from API")
+                return
               }
+
+              // Check if AI detected nonsense/invalid text
+              if (humanizedText.startsWith("ERROR:")) {
+                toast.error("Unable to humanize", {
+                  description: humanizedText.replace("ERROR: ", ""),
+                  duration: 8000,
+                })
+                return
+              }
+
+              setOutputText(humanizedText)
+              toast.success("Text humanized successfully!")
             } catch (error) {
               toast.error("Connection Error", {
                 description: error instanceof Error ? error.message : "Failed to connect to Grok API",
