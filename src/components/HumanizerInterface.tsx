@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import humanizePromptRaw from "@/prompts/humanize-prompt.md?raw"
 
 const modes = [
   "Chit-chat",
@@ -7,10 +9,13 @@ const modes = [
   "Shorten",
 ]
 
+const SYSTEM_PROMPT = humanizePromptRaw + "\n\nReturn ONLY the humanized text without any explanations or additional formatting."
+
 export function HumanizerInterface() {
   const [selectedMode, setSelectedMode] = useState("Chit-chat")
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const inputWordCount = inputText.trim() ? inputText.trim().split(/\s+/).length : 0
   const outputWordCount = outputText.trim() ? outputText.trim().split(/\s+/).length : 0
@@ -62,11 +67,75 @@ export function HumanizerInterface() {
       <div className="flex justify-center">
         <Button
           size="lg"
-          onClick={() => {
-            // TODO: Add humanization logic will be here :)
+          onClick={async () => {
+            if (!inputText.trim()) {
+              toast.warning("Please enter some text to humanize")
+              return
+            }
+
+            const apiKey = localStorage.getItem("grok-api-key")
+            if (!apiKey) {
+              toast.error("Please set your Grok API key in Settings first")
+              return
+            }
+
+            setIsLoading(true)
+            setOutputText("")
+
+            try {
+              const response = await fetch("https://api.x.ai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                  messages: [
+                    {
+                      role: "system",
+                      content: SYSTEM_PROMPT,
+                    },
+                    {
+                      role: "user",
+                      content: inputText,
+                    },
+                  ],
+                  model: "grok-2-latest",
+                  stream: false,
+                  temperature: 0.7,
+                }),
+              })
+
+              if (!response.ok) {
+                const errorData = await response.json()
+                toast.error("API Error", {
+                  description: JSON.stringify(errorData, null, 2),
+                  duration: 15000,
+                })
+                return
+              }
+
+              const data = await response.json()
+              const humanizedText = data.choices?.[0]?.message?.content || ""
+              
+              if (humanizedText) {
+                setOutputText(humanizedText)
+                toast.success("Text humanized successfully!")
+              } else {
+                toast.error("No response from API")
+              }
+            } catch (error) {
+              toast.error("Connection Error", {
+                description: error instanceof Error ? error.message : "Failed to connect to Grok API",
+                duration: 10000,
+              })
+            } finally {
+              setIsLoading(false)
+            }
           }}
+          disabled={isLoading}
         >
-          Humanize AI
+          {isLoading ? "Humanizing..." : "Humanize AI"}
         </Button>
       </div>
     </div>
