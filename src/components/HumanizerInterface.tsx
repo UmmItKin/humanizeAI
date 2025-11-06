@@ -1,18 +1,27 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import humanizePromptRaw from "@/prompts/humanize-prompt.md?raw"
+import normalPrompt from "@/prompts/normal-prompt.md?raw"
+import chitChatPrompt from "@/prompts/chit-chat-prompt.md?raw"
+import academicPrompt from "@/prompts/academic-prompt.md?raw"
+import shortenPrompt from "@/prompts/shorten-prompt.md?raw"
 
 const modes = [
+  "Normal",
   "Chit-chat",
   "Academic",
   "Shorten",
-]
+] as const
 
-const SYSTEM_PROMPT = humanizePromptRaw
+const PROMPTS = {
+  "Normal": normalPrompt,
+  "Chit-chat": chitChatPrompt,
+  "Academic": academicPrompt,
+  "Shorten": shortenPrompt,
+}
 
 export function HumanizerInterface() {
-  const [selectedMode, setSelectedMode] = useState("Chit-chat")
+  const [selectedMode, setSelectedMode] = useState<typeof modes[number]>("Normal")
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -93,7 +102,7 @@ export function HumanizerInterface() {
                   messages: [
                     {
                       role: "system",
-                      content: SYSTEM_PROMPT,
+                      content: PROMPTS[selectedMode],
                     },
                     {
                       role: "user",
