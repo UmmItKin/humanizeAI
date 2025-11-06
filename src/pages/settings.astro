@@ -1,59 +1,23 @@
 ---
 import '../styles/global.css';
 import { Layout } from "@/components/Layout";
-import { ClientRouter } from "astro:transitions";
+import { SettingsForm } from "@/components/SettingsForm";
+import { GlobalToaster } from "@/components/GlobalToaster";
 ---
 
-<html lang="en" class="dark" transition:animate="fade">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Settings - Astro + TailwindCSS</title>
-		<ClientRouter />
 	</head>
 
 	<body>
 		<Layout client:load title="Humanizer AI - Settings">
-			<div class="max-w-2xl">
-				<div class="space-y-4">
-					<div class="space-y-2">
-						<h2 class="text-xl font-semibold">Grok AI Setup (by xAI)</h2>
-						<p class="text-sm text-muted-foreground">
-							Get your API key from <a href="https://console.x.ai" target="_blank" rel="noopener noreferrer" class="underline hover:text-foreground">console.x.ai</a>
-						</p>
-					</div>
-					
-					<div class="space-y-2">
-						<label for="grok-api-key" class="text-sm font-medium">
-							Grok API Key
-						</label>
-						<input
-							id="grok-api-key"
-							type="password"
-							placeholder="Enter your Grok API key..."
-							class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-						/>
-						<p class="text-xs text-muted-foreground">
-							Your API key is stored locally in your browser
-						</p>
-					</div>
-
-					<div class="flex gap-3">
-						<button
-							class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-						>
-							Save API Key
-						</button>
-						<button
-							class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-						>
-							Test API Key
-						</button>
-					</div>
-				</div>
-			</div>
+			<SettingsForm client:only="react" />
 		</Layout>
+		<GlobalToaster client:only="react" />
 	</body>
 </html>

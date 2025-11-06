@@ -2,22 +2,22 @@
 import '../styles/global.css';
 import { Layout } from "@/components/Layout";
 import { HumanizerInterface } from "@/components/HumanizerInterface";
-import { ClientRouter } from "astro:transitions";
+import { GlobalToaster } from "@/components/GlobalToaster";
 ---
 
-<html lang="en" class="dark" transition:animate="fade">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Humanizer AI</title>
-		<ClientRouter />
 	</head>
 
 	<body>
 		<Layout client:load title="Humanizer AI - Main page">
 			<HumanizerInterface client:load />
 		</Layout>
+		<GlobalToaster client:only="react" />
 	</body>
 </html>

@@ -1,16 +1,14 @@
 ---
 import '../styles/global.css';
-import { ClientRouter } from "astro:transitions";
 const { content } = Astro.props;
 ---
 
-<html lang="en" class="dark" transition:animate="fade">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>{content.title}</title>
-		<ClientRouter />
 	</head>
 	<body>
 		<slot />
