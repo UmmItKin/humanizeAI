@@ -1,15 +1,35 @@
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const GROK_MODELS = [
+  { value: "grok-3", label: "grok-3" },
+  { value: "grok-3-mini", label: "grok-3-mini (Recommended)" },
+  { value: "grok-4-fast-reasoning", label: "grok-4-fast-reasoning" },
+  { value: "grok-4-fast-non-reasoning", label: "grok-4-fast-non-reasoning" },
+  { value: "grok-beta", label: "grok-beta" },
+]
 
 export function SettingsForm() {
   const [apiKey, setApiKey] = useState("")
+  const [selectedModel, setSelectedModel] = useState("grok-3-mini")
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const savedKey = localStorage.getItem("grok-api-key")
+    const savedModel = localStorage.getItem("grok-model")
     if (savedKey) {
       setApiKey(savedKey)
+    }
+    if (savedModel) {
+      setSelectedModel(savedModel)
     }
   }, [])
 
@@ -22,8 +42,9 @@ export function SettingsForm() {
     }
     
     localStorage.setItem("grok-api-key", apiKey)
+    localStorage.setItem("grok-model", selectedModel)
     toast.success("Saved Successfully!", {
-      description: "Your API key has been stored locally",
+      description: "Your API key and model preference have been stored locally",
     })
   }
 
@@ -55,7 +76,7 @@ export function SettingsForm() {
               content: "Testing. Just say hi and hello world and nothing else.",
             },
           ],
-          model: "grok-2-latest",
+          model: selectedModel,
           stream: false,
           temperature: 0,
         }),
@@ -120,6 +141,27 @@ export function SettingsForm() {
           />
           <p className="text-xs text-muted-foreground">
             Your API key is stored locally in your browser
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="grok-model" className="text-sm font-medium">
+            Grok Model
+          </label>
+          <Select value={selectedModel} onValueChange={setSelectedModel}>
+            <SelectTrigger id="grok-model" className="w-full">
+              <SelectValue placeholder="Select a model" />
+            </SelectTrigger>
+            <SelectContent>
+              {GROK_MODELS.map((model) => (
+                <SelectItem key={model.value} value={model.value}>
+                  {model.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Choose which Grok model to use for text humanization
           </p>
         </div>
 

@@ -51,6 +51,8 @@ export function HumanizerInterface() {
       return
     }
 
+    const savedModel = localStorage.getItem("grok-model") || "grok-3-mini"
+
     setIsLoading(true)
     setOutputText("")
 
@@ -72,7 +74,7 @@ export function HumanizerInterface() {
               content: inputText,
             },
           ],
-          model: "grok-2-latest",
+          model: savedModel,
           stream: false,
           temperature: 0.7,
         }),
