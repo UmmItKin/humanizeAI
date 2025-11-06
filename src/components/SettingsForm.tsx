@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
+import { Spinner } from "@/components/ui/spinner"
 
 export function SettingsForm() {
   const [apiKey, setApiKey] = useState("")
@@ -134,7 +135,14 @@ export function SettingsForm() {
             disabled={isLoading}
             className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
           >
-            {isLoading ? "Testing..." : "Test API Key"}
+            {isLoading ? (
+              <>
+                <Spinner className="mr-2" />
+                Testing...
+              </>
+            ) : (
+              "Test API Key"
+            )}
           </button>
         </div>
       </div>
