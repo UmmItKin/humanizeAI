@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Dialog,
   DialogContent,
@@ -165,7 +165,7 @@ export function HumanizerInterface() {
               />
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-muted/80 rounded-lg">
-                  <Loader2 className="h-16 w-16 animate-spin text-primary" />
+                  <Spinner className="size-16 text-primary" />
                 </div>
               )}
             </div>
@@ -181,7 +181,14 @@ export function HumanizerInterface() {
             onClick={handleButtonClick}
             disabled={isLoading}
           >
-            {isLoading ? "Humanizing..." : "Humanize AI"}
+            {isLoading ? (
+              <>
+                <Spinner className="mr-2" />
+                Humanizing...
+              </>
+            ) : (
+              "Humanize AI"
+            )}
           </Button>
         </div>
       </div>
