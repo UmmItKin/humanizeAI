@@ -104,6 +104,9 @@ export function HumanizerInterface() {
       }
 
       setOutputText(humanizedText)
+      
+      saveToHistory(inputText, humanizedText, selectedMode)
+      
       toast.success("Text humanized successfully!")
     } catch (error) {
       toast.error("Connection Error", {
@@ -113,6 +116,26 @@ export function HumanizerInterface() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const saveToHistory = (input: string, output: string, mode: string) => {
+    const historyItem = {
+      id: Date.now().toString(),
+      timestamp: Date.now(),
+      mode,
+      input,
+      output,
+    }
+
+    const savedHistory = localStorage.getItem("humanize-history")
+    const history = savedHistory ? JSON.parse(savedHistory) : []
+    history.unshift(historyItem)
+    
+    if (history.length > 100) {
+      history.pop()
+    }
+    
+    localStorage.setItem("humanize-history", JSON.stringify(history))
   }
 
   const handleButtonClick = () => {
