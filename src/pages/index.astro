@@ -2,15 +2,17 @@
 import '../styles/global.css';
 import { Layout } from "@/components/Layout";
 import { HumanizerInterface } from "@/components/HumanizerInterface";
+import { ClientRouter } from "astro:transitions";
 ---
 
-<html lang="en" class="dark">
+<html lang="en" class="dark" transition:animate="fade">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Humanizer AI</title>
+		<ClientRouter />
 	</head>
 
 	<body>

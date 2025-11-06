@@ -1,19 +1,21 @@
 ---
 import '../styles/global.css';
 import { Layout } from "@/components/Layout";
+import { ClientRouter } from "astro:transitions";
 ---
 
-<html lang="en" class="dark">
+<html lang="en" class="dark" transition:animate="fade">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Settings - Astro + TailwindCSS</title>
+		<ClientRouter />
 	</head>
 
 	<body>
-		<Layout client:load title="Settings">
+		<Layout client:load title="Humanizer AI - Settings">
 			<div class="grid auto-rows-min gap-4 md:grid-cols-3">
 				<div class="bg-muted/50 aspect-video rounded-xl" />
 				<div class="bg-muted/50 aspect-video rounded-xl" />
