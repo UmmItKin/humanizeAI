@@ -14,6 +14,7 @@ interface HistoryItem {
 export function HistoryList() {
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [expandedOutputs, setExpandedOutputs] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     loadHistory()
@@ -51,6 +52,27 @@ export function HistoryList() {
 
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleString()
+  }
+
+  const toggleOutputExpansion = (id: string) => {
+    const newExpanded = new Set(expandedOutputs)
+    if (newExpanded.has(id)) {
+      newExpanded.delete(id)
+    } else {
+      newExpanded.add(id)
+    }
+    setExpandedOutputs(newExpanded)
+  }
+
+  const truncateText = (text: string, wordLimit: number) => {
+    const words = text.split(/\s+/)
+    if (words.length <= wordLimit) {
+      return { text, isTruncated: false }
+    }
+    return {
+      text: words.slice(0, wordLimit).join(' ') + '...',
+      isTruncated: true
+    }
   }
 
   if (history.length === 0) {
@@ -124,9 +146,37 @@ export function HistoryList() {
 
               <div>
                 <p className="text-sm font-medium mb-2">Output ({item.output.split(/\s+/).length} words)</p>
-                <p className="text-sm bg-muted rounded p-3 whitespace-pre-wrap">
-                  {item.output}
-                </p>
+                {(() => {
+                  const wordCount = item.output.split(/\s+/).length
+                  const isExpanded = expandedOutputs.has(item.id)
+                  const { text, isTruncated } = truncateText(item.output, 200)
+                  
+                  return (
+                    <div className="relative">
+                      <div className={`text-sm bg-muted rounded p-3 whitespace-pre-wrap ${!isExpanded && isTruncated ? 'max-h-[300px] overflow-hidden blur-[.9px]' : ''}`}>
+                        {item.output}
+                      </div>
+                      {!isExpanded && isTruncated && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <button
+                            onClick={() => toggleOutputExpansion(item.id)}
+                            className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg"
+                          >
+                            Show More
+                          </button>
+                        </div>
+                      )}
+                      {isExpanded && isTruncated && (
+                        <button
+                          onClick={() => toggleOutputExpansion(item.id)}
+                          className="mt-2 text-sm text-primary hover:underline"
+                        >
+                          Hide
+                        </button>
+                      )}
+                    </div>
+                  )
+                })()}
               </div>
             </div>
           </div>
