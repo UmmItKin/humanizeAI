@@ -16,12 +16,31 @@ import { ClientRouter } from "astro:transitions";
 
 	<body>
 		<Layout client:load title="Humanizer AI - Settings">
-			<div class="grid auto-rows-min gap-4 md:grid-cols-3">
-				<div class="bg-muted/50 aspect-video rounded-xl" />
-				<div class="bg-muted/50 aspect-video rounded-xl" />
-				<div class="bg-muted/50 aspect-video rounded-xl" />
+			<div class="max-w-2xl">
+				<div class="space-y-4">
+					<div class="space-y-2">
+						<h2 class="text-xl font-semibold">Grok AI Setup (by xAI)</h2>
+						<p class="text-sm text-muted-foreground">
+							Get your API key from <a href="https://console.x.ai" target="_blank" rel="noopener noreferrer" class="underline hover:text-foreground">console.x.ai</a>
+						</p>
+					</div>
+					
+					<div class="space-y-2">
+						<label for="grok-api-key" class="text-sm font-medium">
+							Grok API Key
+						</label>
+						<input
+							id="grok-api-key"
+							type="password"
+							placeholder="Enter your Grok API key..."
+							class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+						/>
+						<p class="text-xs text-muted-foreground">
+							Your API key is stored locally in your browser
+						</p>
+					</div>
+				</div>
 			</div>
-			<div class="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
 		</Layout>
 	</body>
 </html>
