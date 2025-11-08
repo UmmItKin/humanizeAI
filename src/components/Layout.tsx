@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { useEffect, useState } from "react"
 import { AppSidebar } from "@/components/AppSidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Footer } from "@/components/FooterReact"
@@ -10,8 +11,26 @@ interface LayoutProps {
 }
 
 export function Layout({ children, title }: LayoutProps) {
+  const [open, setOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("sidebar:state")
+      return savedState ? savedState === "true" : true
+    }
+    return true
+  })
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sidebar:state", String(newOpen))
+    }
+  }
+
   return (
-    <SidebarProvider>
+    <SidebarProvider 
+      open={open}
+      onOpenChange={handleOpenChange}
+    >
       <AppSidebar />
       <SidebarInset className="flex flex-col min-h-screen">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
