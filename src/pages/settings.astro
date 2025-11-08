@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { Layout } from "@/components/Layout";
 import { SettingsForm } from "@/components/SettingsForm";
+import { ViewTransitions } from 'astro:transitions';
 ---
 
 <html lang="en" class="dark">
@@ -11,6 +12,7 @@ import { SettingsForm } from "@/components/SettingsForm";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Settings - Humanizer AI</title>
+		<ViewTransitions />
 	</head>
 
 	<body>

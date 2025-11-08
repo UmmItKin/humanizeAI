@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
-import { Layout } from "@/components/Layout";
-import { HumanizerInterface } from "@/components/HumanizerInterface";
+import { App } from "@/components/App";
 ---
 
 <html lang="en" class="dark">
@@ -14,8 +13,6 @@ import { HumanizerInterface } from "@/components/HumanizerInterface";
 	</head>
 
 	<body>
-		<Layout client:only="react" title="Humanizer AI">
-			<HumanizerInterface client:load />
-		</Layout>
+		<App client:only="react" />
 	</body>
 </html>
