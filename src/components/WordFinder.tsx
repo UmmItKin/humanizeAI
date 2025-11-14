@@ -35,19 +35,45 @@ export function WordFinder() {
       return
     }
 
-    const apiKey = localStorage.getItem("grok-api-key")
-    if (!apiKey) {
-      toast.error("Please set your Grok API key in Settings first")
-      return
+    // Check which API to use
+    const useOpenAI = localStorage.getItem("use-openai") === "true"
+    
+    let apiKey: string | null
+    let model: string
+    let baseURL: string
+    
+    if (useOpenAI) {
+      apiKey = localStorage.getItem("openai-api-key")
+      model = localStorage.getItem("openai-model") || "gpt-4o-mini"
+      const useCustomURL = localStorage.getItem("use-custom-url") === "true"
+      const customBaseURL = localStorage.getItem("openai-base-url")
+      
+      if (useCustomURL && customBaseURL) {
+        baseURL = customBaseURL
+      } else {
+        baseURL = "https://api.openai.com/v1/chat/completions"
+      }
+      
+      if (!apiKey) {
+        toast.error("Please set your OpenAI API key in Settings first")
+        return
+      }
+    } else {
+      apiKey = localStorage.getItem("grok-api-key")
+      model = localStorage.getItem("grok-model") || "grok-3-mini"
+      baseURL = "https://api.x.ai/v1/chat/completions"
+      
+      if (!apiKey) {
+        toast.error("Please set your Grok API key in Settings first")
+        return
+      }
     }
-
-    const savedModel = localStorage.getItem("grok-model") || "grok-3-mini"
 
     setIsLoading(true)
     setAlternatives([])
 
     try {
-      const response = await fetch("https://api.x.ai/v1/chat/completions", {
+      const response = await fetch(baseURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +90,7 @@ export function WordFinder() {
               content: inputWord,
             },
           ],
-          model: savedModel,
+          model: model,
           stream: false,
           temperature: 0.5,
         }),
