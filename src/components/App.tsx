@@ -43,7 +43,7 @@ export function App() {
   return (
     <AppLayout 
       currentSection={currentSection} 
-      onSectionChange={setCurrentSection}
+      onSectionChange={(section) => setCurrentSection(section as Section)}
       title={getTitleForSection(currentSection)}
     >
       {renderSection()}

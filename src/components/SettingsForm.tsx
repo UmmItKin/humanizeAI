@@ -30,16 +30,18 @@ export function SettingsForm() {
   const [isLoading, setIsLoading] = useState(false)
   
   // OpenAI settings
-  const [useOpenAI, setUseOpenAI] = useState(false)
   const [openaiKey, setOpenaiKey] = useState("")
   const [openaiModel, setOpenaiModel] = useState("gpt-4o-mini")
   const [customBaseURL, setCustomBaseURL] = useState("")
   const [useCustomURL, setUseCustomURL] = useState(false)
+  
+  // Priority setting
+  const [apiPriority, setApiPriority] = useState<"grok" | "openai">("grok")
 
   useEffect(() => {
     const savedKey = localStorage.getItem("grok-api-key")
     const savedModel = localStorage.getItem("grok-model")
-    const savedUseOpenAI = localStorage.getItem("use-openai")
+    const savedPriority = localStorage.getItem("api-priority") as "grok" | "openai" | null
     const savedOpenAIKey = localStorage.getItem("openai-api-key")
     const savedOpenAIModel = localStorage.getItem("openai-model")
     const savedBaseURL = localStorage.getItem("openai-base-url")
@@ -51,8 +53,8 @@ export function SettingsForm() {
     if (savedModel) {
       setSelectedModel(savedModel)
     }
-    if (savedUseOpenAI) {
-      setUseOpenAI(savedUseOpenAI === "true")
+    if (savedPriority) {
+      setApiPriority(savedPriority)
     }
     if (savedOpenAIKey) {
       setOpenaiKey(savedOpenAIKey)
@@ -69,62 +71,57 @@ export function SettingsForm() {
   }, [])
 
   const handleSave = () => {
-    if (useOpenAI) {
-      if (!openaiKey.trim()) {
-        toast.warning("Empty OpenAI API Key", {
-          description: "Please enter an OpenAI API key",
-        })
-        return
-      }
+    // Save both APIs if configured
+    if (apiKey.trim()) {
+      localStorage.setItem("grok-api-key", apiKey)
+      localStorage.setItem("grok-model", selectedModel)
+    }
+    
+    if (openaiKey.trim()) {
       localStorage.setItem("openai-api-key", openaiKey)
       localStorage.setItem("openai-model", openaiModel)
-      localStorage.setItem("use-openai", "true")
-      if (useCustomURL) {
+      if (useCustomURL && customBaseURL.trim()) {
         localStorage.setItem("openai-base-url", customBaseURL)
         localStorage.setItem("use-custom-url", "true")
       } else {
         localStorage.removeItem("openai-base-url")
         localStorage.setItem("use-custom-url", "false")
       }
-    } else {
-      if (!apiKey.trim()) {
-        toast.warning("Empty API Key", {
-          description: "Please enter a Grok API key",
-        })
-        return
-      }
-      localStorage.setItem("grok-api-key", apiKey)
-      localStorage.setItem("grok-model", selectedModel)
-      localStorage.setItem("use-openai", "false")
+    }
+    
+    // Save priority setting
+    localStorage.setItem("api-priority", apiPriority)
+    
+    // Check if at least one API is configured
+    if (!apiKey.trim() && !openaiKey.trim()) {
+      toast.warning("No API Key", {
+        description: "Please enter at least one API key",
+      })
+      return
     }
     
     toast.success("Saved Successfully!", {
-      description: "Your API settings have been stored locally",
+      description: `Your API settings have been saved. Priority: ${apiPriority === "grok" ? "Grok AI" : "OpenAI"}`,
     })
   }
 
   const handleClear = () => {
-    if (useOpenAI) {
-      setOpenaiKey("")
-      localStorage.removeItem("openai-api-key")
-      toast.success("OpenAI API Key Cleared", {
-        description: "Your OpenAI API key has been removed from local storage",
-      })
-    } else {
-      setApiKey("")
-      localStorage.removeItem("grok-api-key")
-      toast.success("Grok API Key Cleared", {
-        description: "Your Grok API key has been removed from local storage",
-      })
-    }
+    setApiKey("")
+    setOpenaiKey("")
+    localStorage.removeItem("grok-api-key")
+    localStorage.removeItem("openai-api-key")
+    toast.success("All API Keys Cleared", {
+      description: "All API keys have been removed from local storage",
+    })
   }
 
   const handleTest = async () => {
-    const currentKey = useOpenAI ? openaiKey : apiKey
-    const currentModel = useOpenAI ? openaiModel : selectedModel
+    const currentKey = apiPriority === "openai" ? openaiKey : apiKey
+    const currentModel = apiPriority === "openai" ? openaiModel : selectedModel
+    const apiName = apiPriority === "openai" ? "OpenAI" : "Grok AI"
     
     let baseURL = "https://api.x.ai/v1/chat/completions"
-    if (useOpenAI) {
+    if (apiPriority === "openai") {
       if (useCustomURL && customBaseURL.trim()) {
         baseURL = customBaseURL.trim()
       } else {
@@ -134,12 +131,12 @@ export function SettingsForm() {
 
     if (!currentKey.trim()) {
       toast.warning("Empty API Key", {
-        description: `Please enter ${useOpenAI ? 'an OpenAI' : 'a Grok'} API key first`,
+        description: `Please enter ${apiName} API key first`,
       })
       return
     }
 
-    if (useOpenAI && useCustomURL && !customBaseURL.trim()) {
+    if (apiPriority === "openai" && useCustomURL && !customBaseURL.trim()) {
       toast.warning("Empty Base URL", {
         description: "Please enter a custom base URL or uncheck the custom URL option",
       })
@@ -202,37 +199,25 @@ export function SettingsForm() {
   return (
     <div className="max-w-2xl" suppressHydrationWarning>
       <div className="space-y-6" suppressHydrationWarning>
-        {/* API Provider Selection */}
+        {/* API Priority Selection */}
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold">API Provider</h2>
-          <RadioGroup
-            value={useOpenAI ? "openai" : "grok"}
-            onValueChange={(value) => setUseOpenAI(value === "openai")}
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="grok" id="grok" />
-              <label
-                htmlFor="grok"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                Grok AI (xAI)
-              </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="openai" id="openai" />
-              <label
-                htmlFor="openai"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                OpenAI Compatible
-              </label>
-            </div>
-          </RadioGroup>
+          <h2 className="text-xl font-semibold">API Priority</h2>
+          <p className="text-sm text-muted-foreground">
+            Configure both APIs below, then select which one to use as priority
+          </p>
+          <Select value={apiPriority} onValueChange={(value: "grok" | "openai") => setApiPriority(value)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select priority API" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="grok">Grok AI (xAI)</SelectItem>
+              <SelectItem value="openai">OpenAI Compatible</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Grok AI Setup */}
-        {!useOpenAI && (
-          <div className="space-y-4 p-4 border border-border rounded-lg">
+        <div className="space-y-4 p-4 border border-border rounded-lg">
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Grok AI Setup (by xAI)</h3>
               <p className="text-sm text-muted-foreground">
@@ -279,12 +264,10 @@ export function SettingsForm() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        )}
+        </div>
 
         {/* OpenAI Compatible Setup */}
-        {useOpenAI && (
-          <div className="space-y-4 p-4 border border-border rounded-lg">
+        <div className="space-y-4 p-4 border border-border rounded-lg">
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">OpenAI Compatible API</h3>
               <p className="text-sm text-muted-foreground">
@@ -360,8 +343,7 @@ export function SettingsForm() {
                 </div>
               )}
             </div>
-          </div>
-        )}
+        </div>
 
         <div className="text-xs text-muted-foreground">
           All API keys are stored locally in your browser
@@ -390,10 +372,10 @@ export function SettingsForm() {
           </button>
           <button
             onClick={handleClear}
-            disabled={useOpenAI ? !openaiKey : !apiKey}
+            disabled={!apiKey && !openaiKey}
             className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-destructive hover:text-destructive-foreground h-10 px-4 py-2"
           >
-            Clear API Key
+            Clear All API Keys
           </button>
         </div>
       </div>

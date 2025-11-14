@@ -51,16 +51,18 @@ export function HumanizerInterface() {
       return
     }
 
-    // Check which API to use
-    const useOpenAI = localStorage.getItem("use-openai") === "true"
+    // Determine which API to use based on priority
+    const apiPriority = (localStorage.getItem("api-priority") || "grok") as "grok" | "openai"
     
     let apiKey: string | null
     let model: string
     let baseURL: string
+    let apiName: string
     
-    if (useOpenAI) {
+    if (apiPriority === "openai") {
       apiKey = localStorage.getItem("openai-api-key")
       model = localStorage.getItem("openai-model") || "gpt-4o-mini"
+      apiName = "OpenAI"
       const useCustomURL = localStorage.getItem("use-custom-url") === "true"
       const customBaseURL = localStorage.getItem("openai-base-url")
       
@@ -77,6 +79,7 @@ export function HumanizerInterface() {
     } else {
       apiKey = localStorage.getItem("grok-api-key")
       model = localStorage.getItem("grok-model") || "grok-3-mini"
+      apiName = "Grok AI"
       baseURL = "https://api.x.ai/v1/chat/completions"
       
       if (!apiKey) {
