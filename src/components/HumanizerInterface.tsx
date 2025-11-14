@@ -14,9 +14,11 @@ import normalPrompt from "@/prompts/normal-prompt.md?raw"
 import chitChatPrompt from "@/prompts/chit-chat-prompt.md?raw"
 import academicPrompt from "@/prompts/academic-prompt.md?raw"
 import shortenPrompt from "@/prompts/shorten-prompt.md?raw"
+import enhancedHumanPrompt from "@/prompts/enhanced-human.md?raw"
 
 const modes = [
   "Normal",
+  "Enhanced Human",
   "Chit-chat",
   "Academic",
   "Shorten",
@@ -24,6 +26,7 @@ const modes = [
 
 const PROMPTS = {
   "Normal": normalPrompt,
+  "Enhanced Human": enhancedHumanPrompt,
   "Chit-chat": chitChatPrompt,
   "Academic": academicPrompt,
   "Shorten": shortenPrompt,
