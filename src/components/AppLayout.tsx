@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Pencil, Settings, History, BookOpen, Languages } from "lucide-react"
+import { Pencil, Settings, History, BookOpen, Languages, Regex } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -40,6 +40,11 @@ const menuItems = [
     id: "translate",
     title: "AI Translate",
     icon: Languages,
+  },
+  {
+    id: "regex-helper",
+    title: "Regex Helper",
+    icon: Regex,
   },
   {
     id: "history",

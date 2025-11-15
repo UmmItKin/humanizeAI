@@ -5,20 +5,23 @@ import { HistoryList } from "@/components/HistoryList"
 import { SettingsForm } from "@/components/SettingsForm"
 import { WordFinder } from "@/components/WordFinder"
 import { TranslateInterface } from "@/components/TranslateInterface"
+import { RegexHelper } from "@/components/RegexHelper"
 
-type Section = "Humanizer" | "word-finder" | "translate" | "history" | "settings"
+type Section = "home" | "word-finder" | "translate" | "regex-helper" | "history" | "settings"
 
 export function App() {
   const [currentSection, setCurrentSection] = useState<Section>("Humanizer")
 
   const renderSection = () => {
     switch (currentSection) {
-      case "Humanizer":
+      case "home":
         return <HumanizerInterface />
       case "word-finder":
         return <WordFinder />
       case "translate":
         return <TranslateInterface />
+      case "regex-helper":
+        return <RegexHelper />
       case "history":
         return <HistoryList />
       case "settings":
@@ -30,12 +33,14 @@ export function App() {
 
   const getTitleForSection = (section: Section): string => {
     switch (section) {
-      case "Humanizer":
+      case "home":
         return "Humanizer AI"
       case "word-finder":
         return "Word Alternatives Finder"
       case "translate":
         return "AI Translate (中文 → English)"
+      case "regex-helper":
+        return "Regex Helper"
       case "history":
         return "Humanizer AI - History"
       case "settings":
