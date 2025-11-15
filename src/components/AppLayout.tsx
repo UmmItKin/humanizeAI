@@ -96,9 +96,9 @@ export function AppLayout({ children, title, currentSection, onSectionChange }: 
   const [open, setOpen] = useState(() => {
     if (typeof window !== "undefined") {
       const savedState = localStorage.getItem("sidebar:state")
-      return savedState ? savedState === "true" : true
+      return savedState ? savedState === "true" : false
     }
-    return true
+    return false
   })
 
   const handleOpenChange = (newOpen: boolean) => {
