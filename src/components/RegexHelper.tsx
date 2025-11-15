@@ -17,6 +17,7 @@ export function RegexHelper() {
   const [requirement, setRequirement] = useState("")
   const [result, setResult] = useState<RegexResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [expectedValue, setExpectedValue] = useState("")
 
   const handleGenerate = async () => {
     if (!sampleText.trim() || !requirement.trim()) {
@@ -46,7 +47,7 @@ export function RegexHelper() {
     setResult(null)
 
     try {
-      const userPrompt = `Sample Text:\n${sampleText}\n\nRequirement:\n${requirement}`
+      const userPrompt = `Sample Text:\n${sampleText}\n\nRequirement:\n${requirement}${expectedValue.trim() ? `\n\nExpected result value (example):\n${expectedValue}\n\nGenerate a regex that matches this value in the sample text above.` : ""}`
 
       const response = await fetch(baseURL, {
         method: "POST",
@@ -116,6 +117,18 @@ export function RegexHelper() {
           onChange={(e) => setRequirement(e.target.value)}
           placeholder='Example: "Find all class attributes" or "Extract all URLs"'
           className="w-full h-24 p-4 rounded-md border border-input bg-background text-sm resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          disabled={isLoading}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">What is the expected result value? (Enter a sample output, e.g. 123456)</label>
+        <input
+          type="text"
+          value={expectedValue}
+          onChange={e => setExpectedValue(e.target.value)}
+          placeholder="e.g. 123456, https://example.com, Image, etc. (actual value you want to match)"
+          className="w-full p-4 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           disabled={isLoading}
         />
       </div>
