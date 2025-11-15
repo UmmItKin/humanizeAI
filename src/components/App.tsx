@@ -6,14 +6,14 @@ import { SettingsForm } from "@/components/SettingsForm"
 import { WordFinder } from "@/components/WordFinder"
 import { TranslateInterface } from "@/components/TranslateInterface"
 
-type Section = "home" | "word-finder" | "translate" | "history" | "settings"
+type Section = "Humanizer" | "word-finder" | "translate" | "history" | "settings"
 
 export function App() {
-  const [currentSection, setCurrentSection] = useState<Section>("home")
+  const [currentSection, setCurrentSection] = useState<Section>("Humanizer")
 
   const renderSection = () => {
     switch (currentSection) {
-      case "home":
+      case "Humanizer":
         return <HumanizerInterface />
       case "word-finder":
         return <WordFinder />
@@ -30,7 +30,7 @@ export function App() {
 
   const getTitleForSection = (section: Section): string => {
     switch (section) {
-      case "home":
+      case "Humanizer":
         return "Humanizer AI"
       case "word-finder":
         return "Word Alternatives Finder"

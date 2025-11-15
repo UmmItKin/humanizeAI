@@ -1,4 +1,4 @@
-import { Home, Settings, History } from "lucide-react"
+import { Pencil, Settings, History } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -13,9 +13,9 @@ import {
 
 const menuItems = [
   {
-    title: "Home",
+    title: "Humanizer",
     url: "/",
-    icon: Home,
+    icon: Pencil,
   },
   {
     title: "History",

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Home, Settings, History, BookOpen, Languages } from "lucide-react"
+import { Pencil, Settings, History, BookOpen, Languages } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -27,9 +27,9 @@ interface AppLayoutProps {
 
 const menuItems = [
   {
-    id: "home",
-    title: "Home",
-    icon: Home,
+    id: "Humanizer",
+    title: "Humanizer",
+    icon: Pencil,
   },
   {
     id: "word-finder",
