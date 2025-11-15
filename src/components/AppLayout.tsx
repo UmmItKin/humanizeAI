@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Home, Settings, History, BookOpen } from "lucide-react"
+import { Home, Settings, History, BookOpen, Languages } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -35,6 +35,11 @@ const menuItems = [
     id: "word-finder",
     title: "Word Finder",
     icon: BookOpen,
+  },
+  {
+    id: "translate",
+    title: "AI Translate",
+    icon: Languages,
   },
   {
     id: "history",

@@ -4,8 +4,9 @@ import { HumanizerInterface } from "@/components/HumanizerInterface"
 import { HistoryList } from "@/components/HistoryList"
 import { SettingsForm } from "@/components/SettingsForm"
 import { WordFinder } from "@/components/WordFinder"
+import { TranslateInterface } from "@/components/TranslateInterface"
 
-type Section = "home" | "word-finder" | "history" | "settings"
+type Section = "home" | "word-finder" | "translate" | "history" | "settings"
 
 export function App() {
   const [currentSection, setCurrentSection] = useState<Section>("home")
@@ -16,6 +17,8 @@ export function App() {
         return <HumanizerInterface />
       case "word-finder":
         return <WordFinder />
+      case "translate":
+        return <TranslateInterface />
       case "history":
         return <HistoryList />
       case "settings":
@@ -31,6 +34,8 @@ export function App() {
         return "Humanizer AI"
       case "word-finder":
         return "Word Alternatives Finder"
+      case "translate":
+        return "AI Translate (中文 → English)"
       case "history":
         return "Humanizer AI - History"
       case "settings":
