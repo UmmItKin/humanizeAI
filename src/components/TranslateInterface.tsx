@@ -9,6 +9,9 @@ export function TranslateInterface() {
   const [outputText, setOutputText] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+  const inputWordCount = inputText.trim() ? inputText.trim().split(/\s+/).length : 0
+  const outputWordCount = outputText.trim() ? outputText.trim().split(/\s+/).length : 0
+
   const handleTranslate = async () => {
     if (!inputText.trim()) {
       toast.warning("Please enter Chinese text")
@@ -80,7 +83,10 @@ export function TranslateInterface() {
   return (
     <div className="space-y-6" suppressHydrationWarning>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Chinese Text</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium">Chinese Text</label>
+          <span className="text-xs text-muted-foreground">{inputWordCount} words</span>
+        </div>
         <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
@@ -107,7 +113,10 @@ export function TranslateInterface() {
 
       {outputText && (
         <div className="space-y-2">
-          <label className="text-sm font-medium">English Translation</label>
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium">English Translation</label>
+            <span className="text-xs text-muted-foreground">{outputWordCount} words</span>
+          </div>
           <div className="relative">
             <textarea
               value={outputText}
