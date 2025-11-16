@@ -6,8 +6,9 @@ import { SettingsForm } from "@/components/SettingsForm"
 import { WordFinder } from "@/components/WordFinder"
 import { TranslateInterface } from "@/components/TranslateInterface"
 import { RegexHelper } from "@/components/RegexHelper"
+import { LinuxCommandAgent } from "@/components/LinuxCommandAgent"
 
-type Section = "home" | "word-finder" | "translate" | "regex-helper" | "history" | "settings"
+type Section = "Humanizer" | "word-finder" | "translate" | "regex-helper" | "linux-command" | "history" | "settings"
 
 export function App() {
   const [currentSection, setCurrentSection] = useState<Section>("Humanizer")
@@ -22,6 +23,8 @@ export function App() {
         return <TranslateInterface />
       case "regex-helper":
         return <RegexHelper />
+      case "linux-command":
+        return <LinuxCommandAgent />
       case "history":
         return <HistoryList />
       case "settings":
@@ -41,6 +44,8 @@ export function App() {
         return "AI Translate (中文 → English)"
       case "regex-helper":
         return "Regex Helper"
+      case "linux-command":
+        return "GNU/Linux Command Agent"
       case "history":
         return "Humanizer AI - History"
       case "settings":

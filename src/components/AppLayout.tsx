@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Pencil, Settings, History, BookOpen, Languages, Regex } from "lucide-react"
+import { Pencil, Settings, History, BookOpen, Languages, Regex, Terminal } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -45,6 +45,11 @@ const menuItems = [
     id: "regex-helper",
     title: "Regex Helper",
     icon: Regex,
+  },
+  {
+    id: "linux-command",
+    title: "Linux Command",
+    icon: Terminal,
   },
   {
     id: "history",
