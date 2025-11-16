@@ -23,21 +23,34 @@ export function TranslateInterface() {
       return
     }
 
-    const apiPriority = (localStorage.getItem("api-priority") || "grok") as "grok" | "openai"
-    const isOpenAI = apiPriority === "openai"
+    const apiPriority = (localStorage.getItem("api-priority") || "grok") as "grok" | "openai" | "deepseek"
     
-    const apiKey = localStorage.getItem(isOpenAI ? "openai-api-key" : "grok-api-key")
-    const model = localStorage.getItem(isOpenAI ? "openai-model" : "grok-model") || (isOpenAI ? "gpt-4o-mini" : "grok-3-mini")
+    let apiKey: string | null
+    let model: string
+    let baseURL: string
+    let apiName: string
     
-    let baseURL = "https://api.x.ai/v1/chat/completions"
-    if (isOpenAI) {
+    if (apiPriority === "deepseek") {
+      apiKey = localStorage.getItem("deepseek-api-key")
+      model = localStorage.getItem("deepseek-model") || "deepseek-chat"
+      apiName = "DeepSeek"
+      baseURL = "https://api.deepseek.com/chat/completions"
+    } else if (apiPriority === "openai") {
+      apiKey = localStorage.getItem("openai-api-key")
+      model = localStorage.getItem("openai-model") || "gpt-4o-mini"
+      apiName = "OpenAI"
       const useCustomURL = localStorage.getItem("use-custom-url") === "true"
       const customBaseURL = localStorage.getItem("openai-base-url")
       baseURL = (useCustomURL && customBaseURL) ? customBaseURL : "https://api.openai.com/v1/chat/completions"
+    } else {
+      apiKey = localStorage.getItem("grok-api-key")
+      model = localStorage.getItem("grok-model") || "grok-3-mini"
+      apiName = "Grok"
+      baseURL = "https://api.x.ai/v1/chat/completions"
     }
 
     if (!apiKey) {
-      toast.error(`Please set your ${isOpenAI ? "OpenAI" : "Grok"} API key in Settings`)
+      toast.error(`Please set your ${apiName} API key in Settings`)
       return
     }
 

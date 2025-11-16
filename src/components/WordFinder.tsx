@@ -36,14 +36,24 @@ export function WordFinder() {
     }
 
     // Determine which API to use based on priority
-    const apiPriority = (localStorage.getItem("api-priority") || "grok") as "grok" | "openai"
+    const apiPriority = (localStorage.getItem("api-priority") || "grok") as "grok" | "openai" | "deepseek"
     
     let apiKey: string | null
     let model: string
     let baseURL: string
     let apiName: string
     
-    if (apiPriority === "openai") {
+    if (apiPriority === "deepseek") {
+      apiKey = localStorage.getItem("deepseek-api-key")
+      model = localStorage.getItem("deepseek-model") || "deepseek-chat"
+      apiName = "DeepSeek"
+      baseURL = "https://api.deepseek.com/chat/completions"
+      
+      if (!apiKey) {
+        toast.error("Please set your DeepSeek API key in Settings first")
+        return
+      }
+    } else if (apiPriority === "openai") {
       apiKey = localStorage.getItem("openai-api-key")
       model = localStorage.getItem("openai-model") || "gpt-4o-mini"
       apiName = "OpenAI"

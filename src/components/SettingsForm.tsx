@@ -24,6 +24,11 @@ const OPENAI_MODELS = [
   { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
 ]
 
+const DEEPSEEK_MODELS = [
+  { value: "deepseek-chat", label: "DeepSeek Chat (Recommended)" },
+  { value: "deepseek-reasoner", label: "DeepSeek Reasoner" },
+]
+
 export function SettingsForm() {
   const [apiKey, setApiKey] = useState("")
   const [selectedModel, setSelectedModel] = useState("grok-3-mini")
@@ -35,17 +40,23 @@ export function SettingsForm() {
   const [customBaseURL, setCustomBaseURL] = useState("")
   const [useCustomURL, setUseCustomURL] = useState(false)
   
+  // DeepSeek settings
+  const [deepseekKey, setDeepseekKey] = useState("")
+  const [deepseekModel, setDeepseekModel] = useState("deepseek-chat")
+  
   // Priority setting
-  const [apiPriority, setApiPriority] = useState<"grok" | "openai">("grok")
+  const [apiPriority, setApiPriority] = useState<"grok" | "openai" | "deepseek">("grok")
 
   useEffect(() => {
     const savedKey = localStorage.getItem("grok-api-key")
     const savedModel = localStorage.getItem("grok-model")
-    const savedPriority = localStorage.getItem("api-priority") as "grok" | "openai" | null
+    const savedPriority = localStorage.getItem("api-priority") as "grok" | "openai" | "deepseek" | null
     const savedOpenAIKey = localStorage.getItem("openai-api-key")
     const savedOpenAIModel = localStorage.getItem("openai-model")
     const savedBaseURL = localStorage.getItem("openai-base-url")
     const savedUseCustomURL = localStorage.getItem("use-custom-url")
+    const savedDeepSeekKey = localStorage.getItem("deepseek-api-key")
+    const savedDeepSeekModel = localStorage.getItem("deepseek-model")
     
     if (savedKey) {
       setApiKey(savedKey)
@@ -68,6 +79,12 @@ export function SettingsForm() {
     if (savedUseCustomURL) {
       setUseCustomURL(savedUseCustomURL === "true")
     }
+    if (savedDeepSeekKey) {
+      setDeepseekKey(savedDeepSeekKey)
+    }
+    if (savedDeepSeekModel) {
+      setDeepseekModel(savedDeepSeekModel)
+    }
   }, [])
 
   const handleSave = () => {
@@ -89,44 +106,60 @@ export function SettingsForm() {
       }
     }
     
+    if (deepseekKey.trim()) {
+      localStorage.setItem("deepseek-api-key", deepseekKey)
+      localStorage.setItem("deepseek-model", deepseekModel)
+    }
+    
     // Save priority setting
     localStorage.setItem("api-priority", apiPriority)
     
     // Check if at least one API is configured
-    if (!apiKey.trim() && !openaiKey.trim()) {
+    if (!apiKey.trim() && !openaiKey.trim() && !deepseekKey.trim()) {
       toast.warning("No API Key", {
         description: "Please enter at least one API key",
       })
       return
     }
     
+    const priorityName = apiPriority === "grok" ? "Grok AI" : apiPriority === "deepseek" ? "DeepSeek" : "OpenAI"
     toast.success("Saved Successfully!", {
-      description: `Your API settings have been saved. Priority: ${apiPriority === "grok" ? "Grok AI" : "OpenAI"}`,
+      description: `Your API settings have been saved. Priority: ${priorityName}`,
     })
   }
 
   const handleClear = () => {
     setApiKey("")
     setOpenaiKey("")
+    setDeepseekKey("")
     localStorage.removeItem("grok-api-key")
     localStorage.removeItem("openai-api-key")
+    localStorage.removeItem("deepseek-api-key")
     toast.success("All API Keys Cleared", {
       description: "All API keys have been removed from local storage",
     })
   }
 
   const handleTest = async () => {
-    const currentKey = apiPriority === "openai" ? openaiKey : apiKey
-    const currentModel = apiPriority === "openai" ? openaiModel : selectedModel
-    const apiName = apiPriority === "openai" ? "OpenAI" : "Grok AI"
-    
+    let currentKey = apiKey
+    let currentModel = selectedModel
+    let apiName = "Grok AI"
     let baseURL = "https://api.x.ai/v1/chat/completions"
+    
     if (apiPriority === "openai") {
+      currentKey = openaiKey
+      currentModel = openaiModel
+      apiName = "OpenAI"
       if (useCustomURL && customBaseURL.trim()) {
         baseURL = customBaseURL.trim()
       } else {
         baseURL = "https://api.openai.com/v1/chat/completions"
       }
+    } else if (apiPriority === "deepseek") {
+      currentKey = deepseekKey
+      currentModel = deepseekModel
+      apiName = "DeepSeek"
+      baseURL = "https://api.deepseek.com/chat/completions"
     }
 
     if (!currentKey.trim()) {
@@ -205,13 +238,14 @@ export function SettingsForm() {
           <p className="text-sm text-muted-foreground">
             Configure both APIs below, then select which one to use as priority
           </p>
-          <Select value={apiPriority} onValueChange={(value: "grok" | "openai") => setApiPriority(value)}>
+          <Select value={apiPriority} onValueChange={(value: "grok" | "openai" | "deepseek") => setApiPriority(value)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select priority API" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="grok">Grok AI (xAI)</SelectItem>
               <SelectItem value="openai">OpenAI Compatible</SelectItem>
+              <SelectItem value="deepseek">DeepSeek</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -266,12 +300,62 @@ export function SettingsForm() {
             </div>
         </div>
 
+        {/* DeepSeek Setup */}
+        <div className="space-y-4 p-4 border border-border rounded-lg">
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold">DeepSeek AI</h3>
+              <p className="text-sm text-muted-foreground">
+                Get your API key from{" "}
+                <a
+                  href="https://platform.deepseek.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-foreground"
+                >
+                  platform.deepseek.com
+                </a>
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="deepseek-api-key" className="text-sm font-medium">
+                DeepSeek API Key
+              </label>
+              <input
+                id="deepseek-api-key"
+                type="password"
+                value={deepseekKey}
+                onChange={(e) => setDeepseekKey(e.target.value)}
+                placeholder="Enter your DeepSeek API key..."
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="deepseek-model" className="text-sm font-medium">
+                DeepSeek Model
+              </label>
+              <Select value={deepseekModel} onValueChange={setDeepseekModel}>
+                <SelectTrigger id="deepseek-model" className="w-full">
+                  <SelectValue placeholder="Select a model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {DEEPSEEK_MODELS.map((model) => (
+                    <SelectItem key={model.value} value={model.value}>
+                      {model.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+        </div>
+
         {/* OpenAI Compatible Setup */}
         <div className="space-y-4 p-4 border border-border rounded-lg">
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">OpenAI Compatible API</h3>
               <p className="text-sm text-muted-foreground">
-                Works with OpenAI, DeepSeek, ChatAnywhere, and other compatible APIs
+                Works with OpenAI, ChatAnywhere, and other compatible APIs
               </p>
             </div>
 
