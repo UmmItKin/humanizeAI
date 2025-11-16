@@ -15,7 +15,7 @@ export function App() {
 
   const renderSection = () => {
     switch (currentSection) {
-      case "home":
+      case "Humanizer":
         return <HumanizerInterface />
       case "word-finder":
         return <WordFinder />
@@ -36,7 +36,7 @@ export function App() {
 
   const getTitleForSection = (section: Section): string => {
     switch (section) {
-      case "home":
+      case "Humanizer":
         return "Humanizer AI"
       case "word-finder":
         return "Word Alternatives Finder"
